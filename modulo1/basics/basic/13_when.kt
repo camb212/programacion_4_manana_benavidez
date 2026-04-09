@@ -12,4 +12,4 @@ val especialidad = when(codigo){
     else -> "Especialidad no registrada en el sistema"
 }
 println("Especialidad: $especialidad")
-}
+}-
