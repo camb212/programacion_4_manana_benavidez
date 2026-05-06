@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "composr"
 include(":app")
+include(":app")
+include(":app")
  
