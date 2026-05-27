@@ -1,4 +1,3 @@
-package com.shopapi
 package com.shopapp
 
 import androidx.compose.foundation.background

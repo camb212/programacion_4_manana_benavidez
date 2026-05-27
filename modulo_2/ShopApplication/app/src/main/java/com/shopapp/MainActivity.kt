@@ -1,5 +1,4 @@
-package com.shopapi
-
+package com.shopapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

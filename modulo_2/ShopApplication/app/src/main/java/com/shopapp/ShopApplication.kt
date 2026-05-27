@@ -1,8 +1,7 @@
-package com.shopapi
-
+package com.shopapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class ShopApp : Application()
+class ShopAppApplication : Application()
