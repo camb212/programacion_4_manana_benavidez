@@ -1,4 +1,3 @@
-
 pluginManagement {
     repositories {
         google()
@@ -15,5 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
+
 rootProject.name = "ShopApplication"
 include(":app")
+ 
