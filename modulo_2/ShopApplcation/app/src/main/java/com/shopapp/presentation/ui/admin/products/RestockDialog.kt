@@ -1,8 +1,6 @@
 package com.shopapp.presentation.ui.admin.products
 
 // presentation/ui/admin/products/RestockDialog.kt
-package com.shopapp.presentation.ui.admin.products
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
