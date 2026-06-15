@@ -17,4 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "ShopApp"
 include(":app")
 include(":app")
- 
+include(":app")
