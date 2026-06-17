@@ -10,17 +10,16 @@ class CatalogoBasicos extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // ── Text básico ───────────────────────────────────────────────────────
+          // ── TEXT BÁSICO ───────────────────────────────────────────────────────
           const Text(
             'nginx-proxy: En línea',
             style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.bold, // .w100–.w900  ·  .bold = .w700
+              fontWeight: FontWeight.bold,
               color: Colors.green,
               letterSpacing: 0.5,
-              fontStyle: FontStyle.normal, // .italic
+              fontStyle: FontStyle.normal,
               decoration: TextDecoration.underline,
-              //             .underline  .lineThrough  .overline
               shadows: [
                 Shadow(
                   color: Colors.black26,
@@ -30,23 +29,23 @@ class CatalogoBasicos extends StatelessWidget {
               ],
             ),
           ),
+
           const SizedBox(height: 8),
 
-          // ── Alineación y desbordamiento ───────────────────────────────────────
+          // ── TEXTO CON OVERFLOW ───────────────────────────────────────────────
           SizedBox(
             width: double.infinity,
             child: Text(
               'api-gateway-produccion-region-us-east → sin respuesta',
-              textAlign:
-                  TextAlign.justify, // .left  .right  .justify  .start  .end
+              textAlign: TextAlign.justify,
               maxLines: 2,
-              overflow: TextOverflow.clip, // .clip  .fade  .visible
-              softWrap: false, // false = no hace wrap, true = hace wrap
+              overflow: TextOverflow.clip,
+              softWrap: false,
             ),
           ),
+
           const SizedBox(height: 8),
 
-          // ── Text.rich — estilos distintos en un solo widget ───────────────────
           const Text.rich(
             TextSpan(
               children: [
@@ -63,21 +62,28 @@ class CatalogoBasicos extends StatelessWidget {
                 ),
                 TextSpan(
                   text: ' — última revisión hace 5 min',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
           ),
+
           const SizedBox(height: 8),
 
-          // ── SelectableText — el usuario puede seleccionar y copiar ───────────
           const SelectableText(
             '10.0.0.12:5432',
-            style: TextStyle(fontFamily: 'monospace', fontSize: 14),
+            style: TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 14,
+            ),
           ),
+
           const Divider(height: 32),
 
-          // Agrega a children: [ ... ]
+          // ── ICONOS ───────────────────────────────────────────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -86,11 +92,11 @@ class CatalogoBasicos extends StatelessWidget {
                 size: 80,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              Icon(Icons.cancel, size: 40, color: Colors.red),
-              Icon(Icons.warning_amber, size: 80, color: Colors.orange),
-              Icon(Icons.dns, size: 40, color: Colors.indigo),
-              Icon(Icons.wifi_off, size: 14, color: Colors.grey),
-              Tooltip(
+              const Icon(Icons.cancel, size: 40, color: Colors.red),
+              const Icon(Icons.warning_amber, size: 80, color: Colors.orange),
+              const Icon(Icons.dns, size: 40, color: Colors.indigo),
+              const Icon(Icons.wifi_off, size: 14, color: Colors.grey),
+              const Tooltip(
                 message: 'Servidor activo',
                 child: Icon(
                   Icons.check_circle_outline,
@@ -100,18 +106,19 @@ class CatalogoBasicos extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 8),
+
           const Icon(
             Icons.settings,
             size: 24,
             color: Colors.blueGrey,
             semanticLabel: 'Configuración',
-          ), // leído por lectores de pantalla
+          ),
+
           const Divider(height: 32),
 
-          // Agrega a children: [ ... ]
-
-          // ── Cuatro variantes ──────────────────────────────────────────────────
+          // ── BOTONES ───────────────────────────────────────────────────────────
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -120,22 +127,27 @@ class CatalogoBasicos extends StatelessWidget {
                 onPressed: () {},
                 child: const Text('ElevatedButton'),
               ),
-              FilledButton(onPressed: () {}, child: const Text('FilledButton')),
+              FilledButton(
+                onPressed: () {},
+                child: const Text('FilledButton'),
+              ),
               OutlinedButton(
                 onPressed: () {},
                 child: const Text('OutlinedButton'),
               ),
-              TextButton(onPressed: () {}, child: const Text('TextButton')),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {},
-                child: const Text('Desactivado'),
+                child: const Text('TextButton'),
               ),
-              //             ↑ onPressed: null → desactiva el botón visualmente
+              const ElevatedButton(
+                onPressed: null,
+                child: Text('Desactivado'),
+              ),
             ],
           ),
+
           const SizedBox(height: 12),
 
-          // ── Variantes .icon ───────────────────────────────────────────────────
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -169,15 +181,18 @@ class CatalogoBasicos extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 12),
 
-          // ── Botón con estilo personalizado ────────────────────────────────────
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade600,
+              backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 32,
+                vertical: 14,
+              ),
               shape: const StadiumBorder(),
               elevation: 12,
             ),
@@ -186,23 +201,33 @@ class CatalogoBasicos extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
+
           const Divider(height: 32),
 
-          // Agrega a children: [ ... ]
+          // ── CHIPS AVANZADOS ────────────────────────────────────────────────
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              const Chip(label: Text('nginx')),
-              const Chip(
-                avatar: Icon(Icons.check, size: 16, color: Colors.white),
-                label: Text('TLS 1.3'),
-                backgroundColor: Colors.green,
-                labelStyle: TextStyle(color: Colors.white, fontSize: 12),
+              Chip(
+                label: const Text('nginx'),
+                padding: const EdgeInsets.all(8),
+                deleteIcon: const Icon(Icons.close, size: 16),
+                onDeleted: () {},
+              ),
+              Chip(
+                avatar: const Icon(Icons.check, size: 16, color: Colors.white),
+                label: const Text('TLS 1.3'),
+                backgroundColor: Colors.blue,
+                labelStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+                padding: const EdgeInsets.all(8),
               ),
               FilterChip(
                 label: const Text('HTTP/2'),
-                selected: true,
+                selected: false,
                 onSelected: (_) {},
               ),
               ActionChip(
@@ -210,9 +235,140 @@ class CatalogoBasicos extends StatelessWidget {
                 avatar: const Icon(Icons.open_in_new, size: 16),
                 onPressed: () {},
               ),
+              InputChip(
+                avatar: const Icon(Icons.dns, size: 16),
+                label: const Text('database'),
+                selected: true,
+                onSelected: (_) {},
+                onDeleted: () {},
+                deleteIcon: const Icon(Icons.close, size: 16),
+                padding: const EdgeInsets.all(8),
+              ),
             ],
           ),
+
+          const SizedBox(height: 12),
+
+          // ── CIRCULAR PROGRESS ────────────────────────────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const SizedBox(
+                width: 48,
+                height: 48,
+                child: CircularProgressIndicator(), // value: null → animación continua
+              ),
+              // MODIFICADO: value pasa a null y se agrega backgroundColor
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: CircularProgressIndicator(
+                  value: null, // Pasa a animación continua
+                  backgroundColor: Colors.grey.shade200, // Pista ahora visible
+                  color: Colors.green,
+                  strokeWidth: 6,
+                ),
+              ),
+              // MODIFICADO: Envuelto en Transform.scale para reducir tamaño al 50% sin alterar el strokeWidth original
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: Transform.scale(
+                  scale: 0.5, // Escala sin cambiar strokeWidth
+                  child: const CircularProgressIndicator(
+                    value: 0.3,
+                    color: Colors.red,
+                    strokeWidth: 3,
+                    strokeCap: StrokeCap.round,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── LINEAL PROGRESS ──────────────────────────────────────────────────
+          const LinearProgressIndicator(), // indeterminado
+          const SizedBox(height: 8),
+          const LinearProgressIndicator(value: 0.6, color: Colors.indigo), // 60 %
+          const SizedBox(height: 8),
+          // MODIFICADO: minHeight cambia de 6 a 12
+          const LinearProgressIndicator(
+            value: 1.0,
+            color: Colors.green,
+            minHeight: 12, // Barra sustancialmente más gruesa
+          ),
+
           const Divider(height: 32),
+
+          // ── CARDS ────────────────────────────────────────────────────────────
+          Card(
+            elevation: 0,
+            color: Colors.red.shade50,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
+              ),
+              isThreeLine: true,
+              leading: const Icon(Icons.dns, color: Colors.indigo),
+              title: const Text('nginx-proxy'),
+              subtitle: const Text(
+                '10.0.0.5 · 45ms · Servicio estable en producción con latencia normal y sin errores detectados',
+              ),
+              trailing: const Icon(Icons.circle, color: Colors.green, size: 12),
+              onTap: () {},
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Card(
+            elevation: 12,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
+              ),
+              isThreeLine: true,
+              leading: CircleAvatar(
+                backgroundColor: Colors.red,
+                child: const Icon(Icons.cancel, color: Colors.white, size: 20),
+              ),
+              title: const Text('backup-worker'),
+              subtitle: const Text(
+                'sin respuesta · 10.0.0.30 · Servicio caído y requiere intervención inmediata del equipo',
+              ),
+              trailing: TextButton(
+                onPressed: () {},
+                child: const Text('Ver'),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Card(
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SwitchListTile(
+              value: false,
+              onChanged: (_) {},
+              title: const Text('Modo mantenimiento'),
+              subtitle: const Text(
+                'Activa el modo mantenimiento para detener tráfico hacia este servicio',
+              ),
+            ),
+          ),
         ],
       ),
     );
