@@ -1,11 +1,13 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modulo11_gorouter/router/app_router_paso2.dart';
+import 'package:modulo11_gorouter/router/app_router_paso3.dart';
+import 'package:modulo11_gorouter/router/app_router_paso4.dart';
+import 'package:modulo11_gorouter/router/app_router_paso5.dart';
 import 'router/app_router.dart';
-import 'router/app_router_paso2.dart';
-import 'router/app_router_paso3.dart';
-import 'router/app_router_paso4.dart';
-import 'router/app_router_paso5.dart';
+
+//import 'router/app_router_paso5.dart';
 
 // ┌──────────────────────────────────────────────────────────────────┐
 // │  Cambia este número y guarda (Ctrl+S) para navegar entre pasos. │
@@ -15,33 +17,29 @@ import 'router/app_router_paso5.dart';
 // │  4  Paso 4  ShellRoute completo + NavigationBar persistente     │
 // │  5  Paso 5  Guard redirect + pantalla de login + Riverpod       │
 // └──────────────────────────────────────────────────────────────────┘
-const int paso = 1;
+const int paso = 5;
 
 void main() {
-  runApp(
-    ProviderScope(
-      child: AppMonitoreo(paso: paso),
-    ),
-  );
+  runApp(ProviderScope(child: AppMonitoreo(paso: paso)));
 }
 
-class AppMonitoreo extends StatelessWidget {
+class AppMonitoreo extends ConsumerWidget {
   final int paso;
   const AppMonitoreo({super.key, required this.paso});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef widgetRef) {
     final router = switch (paso) {
       1 => appRouter,
       2 => appRouterPaso2,
       3 => appRouterPaso3,
       4 => appRouterPaso4,
-      5 => appRouterPaso5(context),
+      5 => appRouterPaso5(widgetRef),
       _ => appRouter,
     };
 
     return MaterialApp.router(
-      title:        'Monitor SSH',
+      title: 'Monitor SSH',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
       theme: ThemeData(
