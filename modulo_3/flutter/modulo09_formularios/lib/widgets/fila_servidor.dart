@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/servidor_ssh.dart';
 
 class FilaServidor extends StatelessWidget {
-  final ServidorSSH servidor;
+  final ServidorSSH  servidor;
   final VoidCallback onFavorito;
   final VoidCallback onEliminar;
 
@@ -19,15 +19,14 @@ class FilaServidor extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
 
     return ListTile(
+      // leading — icono con color según SSL
       leading: CircleAvatar(
         backgroundColor: servidor.ssl
             ? cs.primaryContainer
             : cs.surfaceContainerHighest,
         child: Icon(
           Icons.dns,
-          color: servidor.ssl
-              ? cs.onPrimaryContainer
-              : cs.onSurfaceVariant,
+          color: servidor.ssl ? cs.onPrimaryContainer : cs.onSurfaceVariant,
         ),
       ),
       title: Text(
@@ -35,12 +34,10 @@ class FilaServidor extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
-        '${servidor.usuario}@${servidor.ip}:${servidor.puerto}\n${servidor.servicio}',
-        style: TextStyle(
-          fontSize: 12,
-          color: cs.onSurfaceVariant,
-        ),
+        '${servidor.usuario}@${servidor.ip}:${servidor.puerto} ${servidor.servicio}',
+        style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
       ),
+      // trailing — dos acciones compactas
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -49,25 +46,19 @@ class FilaServidor extends StatelessWidget {
               servidor.favorito ? Icons.star : Icons.star_border,
               color: servidor.favorito ? Colors.amber : cs.outline,
             ),
-            onPressed: onFavorito,
-            tooltip: servidor.favorito
-                ? 'Quitar favorito'
-                : 'Agregar a favoritos',
+            onPressed:     onFavorito,
+            visualDensity: VisualDensity.compact,
+            tooltip:       servidor.favorito ? 'Quitar favorito' : 'Agregar a favoritos',
           ),
           IconButton(
-            icon: Icon(
-              Icons.delete_outline,
-              color: cs.error,
-            ),
-            onPressed: onEliminar,
-            tooltip: 'Eliminar',
+            icon:          Icon(Icons.delete_outline, color: cs.error),
+            onPressed:     onEliminar,
+            visualDensity: VisualDensity.compact,
+            tooltip:       'Eliminar',
           ),
         ],
       ),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 4,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );
   }
 }

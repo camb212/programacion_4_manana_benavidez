@@ -19,28 +19,22 @@ class Etiqueta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140,
-      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-
+        borderRadius: BorderRadius.circular(4),
         gradient: LinearGradient(
           colors: [
-            color.withOpacity(0.10),
-            color.withOpacity(relleno ? 0.35 : 0.25),
+            color.withOpacity(relleno ? 0.25 : 0.10),
+            color.withOpacity(relleno ? 0.45 : 0.25),
           ],
         ),
-
-        borderRadius: BorderRadius.circular(4),
-
         border: Border(
           bottom: BorderSide(
             color: color,
             width: 2,
           ),
         ),
-
         boxShadow: [
           BoxShadow(
             color: color.withOpacity(0.2),
@@ -49,7 +43,6 @@ class Etiqueta extends StatelessWidget {
           ),
         ],
       ),
-
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -61,15 +54,12 @@ class Etiqueta extends StatelessWidget {
             ),
             const SizedBox(width: 6),
           ],
-          Flexible(
-            child: Text(
-              texto,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w600,
-                fontSize: fontSize,
-              ),
+          Text(
+            texto,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: fontSize,
             ),
           ),
         ],

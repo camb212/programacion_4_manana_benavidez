@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:modulo12_api/pantalla_paso1_users.dart';
 import 'package:modulo12_api/pantalla_paso_2_users.dart';
 
 // ── Importa cada pantalla cuando la crees (descomenta la línea) ──────────────
-// import 'pantalla_paso1.dart';   // ← Paso 1
-// import 'pantalla_paso2.dart';   // ← Paso 2
+import 'pantalla_paso1.dart'; // ← Paso 1
+import 'pantalla_paso1_users.dart'; // ← Paso 1 Users
+import 'pantalla_paso2.dart'; // ← Paso 2
 // import 'pantalla_paso3.dart';   // ← Paso 3
 // import 'pantalla_paso4.dart';   // ← Paso 4
 // import 'pantalla_paso5.dart';   // ← Paso 5
@@ -49,9 +49,11 @@ final _router = GoRouter(
     GoRoute(path: '/', builder: (_, __) => const PantallaMenu()),
 
     // Paso 1 → cuando termines, reemplaza PantallaTemporal por PantallaPaso1()
+    GoRoute(path: '/paso1', builder: (_, __) => const PantallaPaso1()),
     GoRoute(path: '/paso1Users', builder: (_, __) => const PantallaPaso1User()),
 
     // Paso 2 → reemplaza por PantallaPaso2()
+    //GoRoute(path: '/paso2', builder: (_, __) => const PantallaPaso2()),
     GoRoute(
       path: '/paso2Users',
       builder: (_, __) => const PantallaPaso2Users(),

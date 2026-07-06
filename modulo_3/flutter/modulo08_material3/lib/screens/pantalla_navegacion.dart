@@ -32,7 +32,7 @@ class _PantallaNavegacionState extends State<PantallaNavegacion> {
       bottomNavigationBar: NavigationBar(
         selectedIndex:         _indice,
         onDestinationSelected: (i) => setState(() => _indice = i),
-        indicatorColor: cs.primaryContainer,
+        indicatorColor: cs.tertiaryContainer,
         destinations: const [
           NavigationDestination(
             icon:         Icon(Icons.dashboard_outlined),

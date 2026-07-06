@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'widgets/formulario_servidor.dart';
 import 'models/servidor_ssh.dart';
 import 'widgets/fila_servidor.dart';
+import 'screens/pantalla_servidores.dart';
+import 'widgets/tarjeta_servidor_grid.dart';
+import 'screens/pantalla_busqueda.dart';
+
+//CREAR CAMPOS SERVICIO EN EL MODELO Y AGREGAR EN CADA LINEA
+
 // ┌──────────────────────────────────────────────────────────────────┐
 // │  Cambia este número y guarda (Ctrl+S) para navegar entre pasos. │
 // │  1  Paso 1  TextField + TextEditingController + FocusNode       │
@@ -25,10 +31,62 @@ void main() => runApp(MaterialApp(
     1 => const _Paso1(),
     2 => const _Paso2(),
     3 => const _Paso3(),
+    4 => const PantallaServidores(),
+    5 => const PantallaBusqueda(),
     _ => Scaffold(
         body: Center(child: Text('Paso $paso: crea el widget primero'))),
   },
 ));
+class _Paso3 extends StatefulWidget {
+  const _Paso3();
+  @override
+  State<_Paso3> createState() => _Paso3State();
+}
+
+class _Paso3State extends State<_Paso3> {
+  final _servidores = [
+    ServidorSSH(id:'1', nombre:'prod-web-01',  ip:'10.0.2.10',   puerto:22,   usuario:'deploy',   so:'Ubuntu 24.04', ssl:true,  servicio:'Mongo'),
+    ServidorSSH(id:'2', nombre:'prod-db-01',   ip:'10.0.2.20',   puerto:22,   usuario:'postgres', so:'Debian 12',    ssl:true, servicio:'SQL'),
+    ServidorSSH(id:'3', nombre:'staging-api',  ip:'10.0.3.10',   puerto:2222, usuario:'ubuntu',   so:'Ubuntu 24.04', ssl:false, servicio: 'MONGODB'),
+    ServidorSSH(id:'4', nombre:'dev-sandbox',  ip:'192.168.1.5', puerto:22,   usuario:'vagrant',  so:'Alpine Linux', ssl:false, servicio: 'SQL'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title:           Text('Servidores (${_servidores.length})'),
+        backgroundColor: cs.primaryContainer,
+        foregroundColor: cs.onPrimaryContainer,
+      ),
+      body: _servidores.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.dns_outlined, size: 56, color: cs.onSurfaceVariant),
+                  const SizedBox(height: 12),
+                  Text('Sin servidores',
+                      style: TextStyle(color: cs.onSurfaceVariant)),
+                ],
+              ),
+            )
+          : ListView.separated(
+              itemCount:        _servidores.length,
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, indent: 72),
+              itemBuilder: (ctx, i) => FilaServidor(
+                servidor:   _servidores[i],
+                onFavorito: () => setState(() =>
+                    _servidores[i].favorito = !_servidores[i].favorito),
+                onEliminar: () => setState(() => _servidores.removeAt(i)),
+              ),
+            ),
+    );
+  }
+}
 class _Paso2 extends StatelessWidget {
   const _Paso2();
 
@@ -166,56 +224,6 @@ class _Paso1State extends State<_Paso1> {
           ],
         ),
       ),
-    );
-  }
-}
-class _Paso3 extends StatefulWidget {
-  const _Paso3();
-  @override
-  State<_Paso3> createState() => _Paso3State();
-}
-
-class _Paso3State extends State<_Paso3> {
-  final _servidores = [
-    ServidorSSH(id:'1', nombre:'prod-web-01',  ip:'10.0.2.10',  puerto:22,   usuario:'deploy',   so:'Ubuntu 24.04', ssl:true,  favorito:true, servicio:'Web'),
-    ServidorSSH(id:'2', nombre:'prod-db-01',   ip:'10.0.2.20',  puerto:22,   usuario:'postgres', so:'Debian 12',    ssl:true, servicio:'Base de datos'),
-    ServidorSSH(id:'3', nombre:'staging-api',  ip:'10.0.3.10',   puerto:2222, usuario:'ubuntu',   so:'Ubuntu 24.04', ssl:false, servicio:'API'),
-    ServidorSSH(id:'4', nombre:'dev-sandbox',  ip:'192.168.1.5', puerto:22,   usuario:'vagrant',  so:'Alpine Linux', ssl:false, servicio:'Desarrollo'),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        title:           Text('Servidores (${_servidores.length})'),
-        backgroundColor: cs.primaryContainer,
-        foregroundColor: cs.onPrimaryContainer,
-      ),
-      body: _servidores.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.dns_outlined, size: 56, color: cs.onSurfaceVariant),
-                  const SizedBox(height: 12),
-                  Text('Sin servidores',
-                      style: TextStyle(color: cs.onSurfaceVariant)),
-                ],
-              ),
-            )
-          : ListView.separated(
-              itemCount:        _servidores.length,
-              separatorBuilder: (_, __) =>
-                  const Divider(height: 1, indent: 72),
-              itemBuilder: (ctx, i) => FilaServidor(
-                servidor:   _servidores[i],
-                onFavorito: () => setState(() =>
-                    _servidores[i].favorito = !_servidores[i].favorito),
-                onEliminar: () => setState(() => _servidores.removeAt(i)),
-              ),
-            ),
     );
   }
 }

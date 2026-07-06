@@ -37,7 +37,7 @@ class CatalogoBotones extends StatelessWidget {
             child: const Text('ElevatedButton — acción con sombra'),
           ),
           const SizedBox(height: 8),
-          OutlinedButton(
+          FilledButton.tonal(
             onPressed: () {},
             child: const Text('OutlinedButton — acción con borde'),
           ),
@@ -91,6 +91,7 @@ class CatalogoBotones extends StatelessWidget {
             onPressed: () {},
             child: const Text('Eliminar servidor'),
           ),
+          IconButton(icon: Icon(Icons.delete), onPressed: () {}),
           const SizedBox(height: 8),
           // Fila de botones compactos
           Row(children: [

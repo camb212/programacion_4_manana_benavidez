@@ -1,7 +1,6 @@
 // lib/widgets/formulario_servidor.dart
 import 'package:flutter/material.dart';
 
-
 class FormularioServidor extends StatefulWidget {
   final void Function(Map<String, String> datos) onGuardar;
   const FormularioServidor({super.key, required this.onGuardar});
@@ -11,19 +10,22 @@ class FormularioServidor extends StatefulWidget {
 }
 
 class _FormularioServidorState extends State<FormularioServidor> {
-  final _formKey  = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  final _ctrlNombre  = TextEditingController();
-  final _ctrlIp      = TextEditingController();
-  final _ctrlPuerto  = TextEditingController(text: '22');
+  final _ctrlNombre = TextEditingController();
+  final _ctrlMac = TextEditingController();
+  final _ctrlIp = TextEditingController();
+  final _ctrlPuerto = TextEditingController(text: '22');
   final _ctrlUsuario = TextEditingController(text: 'root');
 
-  final _focusIp      = FocusNode();
-  final _focusPuerto  = FocusNode();
+  final _focusMac = FocusNode();
+  final _focusIp = FocusNode();
+  final _focusPuerto = FocusNode();
   final _focusUsuario = FocusNode();
 
-  String _so  = 'Ubuntu 24.04';
-  bool   _ssl = true;
+  String _so = 'Ubuntu 24.04';
+  String _servicio = 'Aplicación web';
+  bool _ssl = true;
 
   // Expresión regular para validar IPv4
   static final _regexIp = RegExp(r'^(\d{1,3}\.){3}\d{1,3}$');
@@ -31,9 +33,11 @@ class _FormularioServidorState extends State<FormularioServidor> {
   @override
   void dispose() {
     _ctrlNombre.dispose();
+    _ctrlMac.dispose();
     _ctrlIp.dispose();
     _ctrlPuerto.dispose();
     _ctrlUsuario.dispose();
+    _focusMac.dispose();
     _focusIp.dispose();
     _focusPuerto.dispose();
     _focusUsuario.dispose();
@@ -45,12 +49,14 @@ class _FormularioServidorState extends State<FormularioServidor> {
     if (!_formKey.currentState!.validate()) return;
 
     widget.onGuardar({
-      'nombre':  _ctrlNombre.text,
-      'ip':      _ctrlIp.text,
-      'puerto':  _ctrlPuerto.text,
+      'nombre': _ctrlNombre.text,
+      'mac': _ctrlMac.text,
+      'ip': _ctrlIp.text,
+      'puerto': _ctrlPuerto.text,
       'usuario': _ctrlUsuario.text,
-      'so':      _so,
-      'ssl':     _ssl.toString(),
+      'servicio': _servicio,
+      'so': _so,
+      'ssl': _ssl.toString(),
     });
   }
 
@@ -64,20 +70,44 @@ class _FormularioServidorState extends State<FormularioServidor> {
 
           // ── Nombre del servidor ───────────────────────────────────
           TextFormField(
-            controller:      _ctrlNombre,
-            decoration:      const InputDecoration(
-              labelText:  'Nombre del servidor',
-              hintText:   'prod-web-01',
+            controller: _ctrlNombre,
+            decoration: const InputDecoration(
+              labelText: 'Nombre del servidor',
+              hintText: 'prod-web-01',
               prefixIcon: Icon(Icons.dns),
-              border:     OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _focusMac.requestFocus(),
+            validator: (v) {
+              if (v == null || v.trim().isEmpty) return 'El nombre es obligatorio';
+              if (v.length < 3) return 'Mínimo 3 caracteres';
+              if (!RegExp(r'^[a-zA-Z0-9\-\_]+$').hasMatch(v)) {
+                return 'Solo letras, números, guiones y guiones bajos';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 12),
+
+          // ── Dirección MAC ───────────────────────────────────────
+          TextFormField(
+            controller: _ctrlMac,
+            focusNode: _focusMac,
+            decoration: const InputDecoration(
+              labelText: 'Dirección MAC',
+              hintText: '00:1A:2B:3C:4D:5E',
+              prefixIcon: Icon(Icons.devices),
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _focusIp.requestFocus(),
             validator: (v) {
-              if (v == null || v.trim().isEmpty) return 'El nombre es obligatorio';
-              if (v.length < 3)                  return 'Mínimo 3 caracteres';
-              if (!RegExp(r'^[a-zA-Z0-9\-\_]+$').hasMatch(v))
-                return 'Solo letras, números, guiones y guiones bajos';
+              if (v == null || v.trim().isEmpty) return 'La MAC es obligatoria';
+              if (!RegExp(r'^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$').hasMatch(v.trim())) {
+                return 'Formato MAC inválido (ej. 00:1A:2B:3C:4D:5E)';
+              }
               return null;
             },
           ),
@@ -85,20 +115,20 @@ class _FormularioServidorState extends State<FormularioServidor> {
 
           // ── Dirección IP ──────────────────────────────────────────
           TextFormField(
-            controller:      _ctrlIp,
-            focusNode:       _focusIp,
-            decoration:      const InputDecoration(
-              labelText:  'Dirección IP',
-              hintText:   '192.168.1.100',
+            controller: _ctrlIp,
+            focusNode: _focusIp,
+            decoration: const InputDecoration(
+              labelText: 'Dirección IP',
+              hintText: '192.168.1.100',
               prefixIcon: Icon(Icons.router),
-              border:     OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
-            keyboardType:    TextInputType.number,
+            keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _focusPuerto.requestFocus(),
             validator: (v) {
               if (v == null || v.isEmpty) return 'La IP es obligatoria';
-              if (!_regexIp.hasMatch(v))  return 'Formato IPv4 inválido (ej. 192.168.1.10)';
+              if (!_regexIp.hasMatch(v)) return 'Formato IPv4 inválido (ej. 192.168.1.10)';
               final octetos = v.split('.').map(int.parse).toList();
               if (octetos.any((o) => o > 255)) return 'Octeto fuera de rango (0–255)';
               return null;
@@ -129,12 +159,12 @@ class _FormularioServidorState extends State<FormularioServidor> {
 
           // ── Usuario ───────────────────────────────────────────────
           TextFormField(
-            controller:      _ctrlUsuario,
-            focusNode:       _focusUsuario,
-            decoration:      const InputDecoration(
-              labelText:  'Usuario',
+            controller: _ctrlUsuario,
+            focusNode: _focusUsuario,
+            decoration: const InputDecoration(
+              labelText: 'Usuario',
               prefixIcon: Icon(Icons.person_outline),
-              border:     OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
             textInputAction: TextInputAction.next,
             validator: (v) =>
@@ -142,6 +172,23 @@ class _FormularioServidorState extends State<FormularioServidor> {
           ),
           const SizedBox(height: 12),
 
+          DropdownButtonFormField<String>(
+            value: _servicio,
+            decoration: const InputDecoration(
+              labelText: 'Servicios',
+              prefixIcon: Icon(Icons.computer),
+              border: OutlineInputBorder(),
+            ),
+            items: [
+              'Aplicación web',
+              'Base de datos',
+              'Servidor DNS',
+              'Proxy',
+              'Storage',
+            ].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+            onChanged: (v) => setState(() => _servicio = v!),
+          ),
+          const SizedBox(height: 8),
           // ── Sistema Operativo — DropdownButtonFormField ────────────
           DropdownButtonFormField<String>(
             value:      _so,

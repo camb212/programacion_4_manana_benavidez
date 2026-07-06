@@ -4,6 +4,9 @@ import 'screens/pantalla_tema.dart';
 import 'screens/pantalla_appbar.dart';
 import 'widgets/catalogo_botones.dart';
 import 'screens/pantalla_navegacion.dart';
+import 'screens/pantalla_dialogs.dart';
+
+
 // ┌──────────────────────────────────────────────────────────────────┐
 // │  Cambia este número y guarda (Ctrl+S) para navegar entre pasos. │
 // │  1  Paso 1  ThemeData + Scaffold básico                         │
@@ -13,7 +16,7 @@ import 'screens/pantalla_navegacion.dart';
 // │  5  Paso 5  NavigationBar con 4 pestañas                        │
 // │  6  Paso 6  SnackBar y AlertDialog                              │
 // └──────────────────────────────────────────────────────────────────┘
-const int paso = 2;
+const int paso = 6;
 
 void main() => runApp(const AppMonitoreo());
 
@@ -29,7 +32,7 @@ class _AppMonitoreoState extends State<AppMonitoreo> {
 
   @override
   Widget build(BuildContext context) {
-    const seedColor = Color(0xFF1565C0);
+    const seedColor = Colors.black;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -48,22 +51,21 @@ class _AppMonitoreoState extends State<AppMonitoreo> {
         ),
         useMaterial3: true,
       ),
-
       home: switch (paso) {
         1 => const _Paso1(),
-
         2 => PantallaTema(
-              themeMode: _themeMode,
-              onToggle: (mode) => setState(() => _themeMode = mode),
-            ),
+            themeMode: _themeMode,
+            onToggle: (mode) => setState(() => _themeMode = mode),
+          ),
         3 => const PantallaAppBar(),
         4 => const CatalogoBotones(),
         5 => const PantallaNavegacion(),
+        6 => const PantallaDialogs(),
         _ => Scaffold(
-              body: Center(
-                child: Text('Paso $paso: crea el widget primero'),
-              ),
-            ),
+          body: Center(
+            child: Text('Paso $paso: crea el widget primero'),
+          ),
+        ),
       },
     );
   }
@@ -81,7 +83,8 @@ class _Paso1 extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sistema de Monitoreo'),
-        backgroundColor: cs.primaryContainer,
+        centerTitle: true,
+        backgroundColor: cs.tertiaryContainer,
         foregroundColor: cs.onPrimaryContainer,
         actions: [
           IconButton(
@@ -94,7 +97,11 @@ class _Paso1 extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.dns, size: 64, color: cs.primary),
+            Icon(
+              Icons.cloud,
+              size: 96,
+              color: cs.primary,
+            ),
             const SizedBox(height: 16),
             Text(
               'Servidor web-01',
@@ -120,6 +127,7 @@ class _Paso1 extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
+        tooltip: 'Agregar servidor',
         child: const Icon(Icons.add),
       ),
     );

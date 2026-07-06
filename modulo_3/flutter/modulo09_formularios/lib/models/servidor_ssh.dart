@@ -1,13 +1,14 @@
+// lib/models/servidor_ssh.dart
 class ServidorSSH {
   final String id;
   final String nombre;
   final String ip;
-  final int puerto;
+  final int    puerto;
   final String usuario;
   final String so;
-  final bool ssl;
+  final bool   ssl;
   final String servicio;
-  bool favorito;
+  bool         favorito;    // mutable — puede cambiar sin recrear el objeto
 
   ServidorSSH({
     required this.id,
@@ -17,7 +18,7 @@ class ServidorSSH {
     required this.usuario,
     required this.so,
     required this.ssl,
-    this.servicio = '',
+    required this.servicio,
     this.favorito = false,
   });
 }

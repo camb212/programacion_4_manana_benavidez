@@ -23,7 +23,7 @@ import 'widgets/indicador.dart';
 // │  7  Paso 5   BuildContext                                        │
 // │  8  Paso 6   Composición de widgets                             │
 // └──────────────────────────────────────────────────────────────────┘
-const int paso = 7;
+const int paso = 8;
 
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
@@ -75,7 +75,6 @@ void main() => runApp(MaterialApp(
       appBar: AppBar(title: const Text('Cronómetro')),
       body: const Center(child: Reloj()),
     ),
-    7 => const PantallaContexto(), 
     8 => Scaffold(                             // Paso 6
       body: Center(
         child: Wrap(
@@ -96,8 +95,8 @@ void main() => runApp(MaterialApp(
         ),
       ),
     ),
+    7 => const PantallaContexto(), 
     _ => const Scaffold(body: Center(child: Saludo())),
-
   },
 ));
 
