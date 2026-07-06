@@ -1,26 +1,25 @@
 // lib/presentation/navigation/app_router.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../domain/model/auth_state.dart';
 import '../providers/auth_provider.dart';
+
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 
-// Pantalla temporal para los placeholders
-class _SplashScreen extends StatelessWidget {
-  const _SplashScreen();
+import '../screens/catalog/home_screen.dart';
+import '../screens/catalog/catalog_screen.dart';
 
-  @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-}
+import '../screens/cart/cart_screen.dart';
+
+import 'public_shell.dart';
 
 class _PlaceholderScreen extends ConsumerWidget {
   final String title;
-  const _PlaceholderScreen(this.title);
+
+  const _PlaceholderScreen(this.title, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,103 +31,153 @@ class _PlaceholderScreen extends ConsumerWidget {
             tooltip: 'Cerrar sesión',
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              // Cerrar sesión y volver al login
               await ref.read(authProvider.notifier).logout();
+
+              if (!context.mounted) return;
               context.go('/login');
             },
           ),
         ],
       ),
-      body: Center(child: Text(title, style: const TextStyle(fontSize: 18))),
+      body: Center(
+        child: Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF8888AA),
+            fontSize: 16,
+          ),
+        ),
+      ),
     );
   }
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/',
     refreshListenable: _AuthStateListenable(ref),
     redirect: (context, state) {
-      final authState = ref.read(authProvider);
-      final isChecking = authState.isChecking;
-      final isAuth = authState.isAuthenticated;
-      final isStaff = authState.isStaff;
+      final auth = ref.read(authProvider);
       final location = state.matchedLocation;
 
-      // Mientras se verifica la sesión, mostrar splash.
-      if (isChecking) {
-        return location == '/splash' ? null : '/splash';
-      }
+      if (auth.isChecking) return null;
 
       final isAuthRoute = location == '/login' || location == '/register';
-      final isSplash = location == '/splash';
 
-      // Al terminar la verificación, salir del splash.
-      if (isSplash) return isAuth ? (isStaff ? '/admin' : '/') : '/login';
+      if (!auth.isAuthenticated && !isAuthRoute) {
+        return '/login';
+      }
 
-      // No autenticado → solo puede ir a auth
-      if (!isAuth && !isAuthRoute) return '/login';
+      if (auth.isAuthenticated && isAuthRoute) {
+        return auth.isStaff ? '/admin' : '/';
+      }
 
-      // Autenticado → no puede ir a auth
-      if (isAuth && isAuthRoute) return isStaff ? '/admin' : '/';
-
-      // Cliente intenta acceder a admin → redirigir a home
-      if (isAuth && !isStaff && location.startsWith('/admin')) return '/';
+      if (auth.isAuthenticated &&
+          !auth.isStaff &&
+          location.startsWith('/admin')) {
+        return '/';
+      }
 
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/splash',
-        builder: (_, __) => const _SplashScreen(),
-      ),
-
-      // ── Auth ──────────────────────────────────────────────
+      // ===========================
+      // AUTH
+      // ===========================
       GoRoute(
         path: '/login',
         builder: (_, __) => const LoginScreen(),
       ),
+
       GoRoute(
         path: '/register',
         builder: (_, __) => const RegisterScreen(),
       ),
 
-      // ── Público ───────────────────────────────────────────
-      GoRoute(
-        path: '/',
-        builder: (_, __) => const _PlaceholderScreen('Home — M5'),
-      ),
-      GoRoute(
-        path: '/catalog',
-        builder: (_, __) => const _PlaceholderScreen('Catálogo — M5'),
-      ),
-      GoRoute(
-        path: '/product/:id',
-        builder: (_, __) => const _PlaceholderScreen('Detalle — M5'),
+      // ===========================
+      // PUBLIC
+      // ===========================
+      ShellRoute(
+        builder: (_, __, child) => PublicShell(child: child),
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (_, __) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: '/catalog',
+            builder: (_, __) => const CatalogScreen(),
+          ),
+          GoRoute(
+            path: '/product/:id',
+            builder: (_, state) => _PlaceholderScreen(
+              'Detalle #${state.pathParameters['id']} — M5',
+            ),
+          ),
+          GoRoute(
+            path: '/cart',
+            builder: (_, __) => const CartScreen(),
+          ),
+          GoRoute(
+            path: '/orders',
+            builder: (_, __) => const _PlaceholderScreen('Mis pedidos — M6'),
+          ),
+          GoRoute(
+            path: '/orders/:id',
+            builder: (_, state) => _PlaceholderScreen(
+              'Pedido #${state.pathParameters['id']} — M6',
+            ),
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (_, __) => const _PlaceholderScreen('Perfil — M6'),
+          ),
+        ],
       ),
 
-      // ── Cliente privado ───────────────────────────────────
-      GoRoute(
-        path: '/orders',
-        builder: (_, __) => const _PlaceholderScreen('Mis pedidos — M7'),
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (_, __) => const _PlaceholderScreen('Perfil — M7'),
-      ),
-
-      // ── Admin ─────────────────────────────────────────────
+      // ===========================
+      // ADMIN
+      // ===========================
       GoRoute(
         path: '/admin',
         builder: (_, __) => const _PlaceholderScreen('Dashboard — M8'),
+      ),
+
+      GoRoute(
+        path: '/admin/categories',
+        builder: (_, __) => const _PlaceholderScreen('Categorías — M9'),
+      ),
+
+      GoRoute(
+        path: '/admin/products',
+        builder: (_, __) => const _PlaceholderScreen('Productos — M10'),
+      ),
+
+      GoRoute(
+        path: '/admin/orders',
+        builder: (_, __) => const _PlaceholderScreen('Pedidos admin — M11'),
+      ),
+
+      GoRoute(
+        path: '/admin/orders/:id',
+        builder: (_, state) => _PlaceholderScreen(
+          'Pedido admin #${state.pathParameters['id']} — M11',
+        ),
+      ),
+
+      GoRoute(
+        path: '/admin/users',
+        builder: (_, __) => const _PlaceholderScreen('Usuarios — M12'),
       ),
     ],
   );
 });
 
-// Listenable que notifica al router cuando cambia el AuthState
 class _AuthStateListenable extends ChangeNotifier {
   _AuthStateListenable(Ref ref) {
-    ref.listen<AuthState>(authProvider, (_, __) => notifyListeners());
+    ref.listen<AuthState>(
+      authProvider,
+      (_, __) => notifyListeners(),
+    );
   }
 }
