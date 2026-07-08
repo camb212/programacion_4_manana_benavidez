@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_shop_app/presentation/screens/admin/categoriesadminscreen.dart';
 import 'package:flutter_shop_app/presentation/screens/admin/dashboard_screen.dart';
 import 'package:flutter_shop_app/presentation/screens/auth/profile_screen.dart';
 import 'package:flutter_shop_app/presentation/screens/cart/cart_screen.dart';
@@ -32,7 +33,6 @@ class _PlaceholderScreen extends ConsumerWidget {
             tooltip: 'Cerrar sesión',
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              // Cerrar sesión y volver al login
               await ref.read(authProvider.notifier).logout();
               context.go('/login');
             },
@@ -60,8 +60,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAuthRoute = location == '/login' || location == '/register';
 
       if (!auth.isAuthenticated && !isAuthRoute) return '/login';
-      if (auth.isAuthenticated && isAuthRoute)
+      if (auth.isAuthenticated && isAuthRoute) {
         return auth.isStaff ? '/admin' : '/';
+      }
       if (auth.isAuthenticated &&
           !auth.isStaff &&
           location.startsWith('/admin')) return '/';
@@ -78,11 +79,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, __, child) => PublicShell(child: child),
         routes: [
           GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
-          GoRoute(path: '/catalog', builder: (_, __) => const CatalogScreen()),
-          GoRoute(
-            path: '/cart',
-            builder: (_, __) => const CartScreen(),
-          ),
           GoRoute(
             path: '/catalog',
             builder: (_, __) => const CatalogScreen(),
@@ -95,6 +91,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: '/cart',
+            builder: (_, __) => const CartScreen(),
           ),
           GoRoute(
             path: '/product/:id',
@@ -132,7 +132,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => AdminShell(
           title: 'Categorías',
           currentRoute: state.matchedLocation,
-          child: const _AdminPlaceholder('Categorías — M8'),
+          child:
+              const CategoriesAdminScreen(), // <--- Placeholder reemplazado aquí
         ),
       ),
       GoRoute(
