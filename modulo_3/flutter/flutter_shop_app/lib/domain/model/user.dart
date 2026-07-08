@@ -10,6 +10,7 @@ class User {
   final bool isActive;
   final String dateJoined;
   final int numOrders;
+  final String? avatarUrl; // <-- URL absoluta o null
 
   const User({
     required this.id,
@@ -21,6 +22,7 @@ class User {
     required this.isActive,
     required this.dateJoined,
     required this.numOrders,
+    this.avatarUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> j) => User(
