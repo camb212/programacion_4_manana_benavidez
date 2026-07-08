@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_shop_app/presentation/screens/admin/categoriesadminscreen.dart';
 import 'package:flutter_shop_app/presentation/screens/admin/dashboard_screen.dart';
+import 'package:flutter_shop_app/presentation/screens/admin/productsadminscreen.dart';
 import 'package:flutter_shop_app/presentation/screens/auth/profile_screen.dart';
 import 'package:flutter_shop_app/presentation/screens/cart/cart_screen.dart';
 import 'package:flutter_shop_app/presentation/screens/catalog/product_detail_screen.dart';
@@ -141,7 +142,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => AdminShell(
           title: 'Productos',
           currentRoute: state.matchedLocation,
-          child: const _AdminPlaceholder('Productos — M9'),
+          child: const ProductsAdminScreen(),
         ),
       ),
       GoRoute(
