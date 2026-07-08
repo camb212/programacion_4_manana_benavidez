@@ -7,16 +7,24 @@ import '../../domain/model/category.dart';
 class CategoriesAdminState {
   final List<Category> categories;
   final bool isLoading;
+  final bool isLoadingMore;
   final String? error;
   final String search;
   final CategoryFormState formState;
+  final bool hasMore;
+  final int page;
+  final int pageSize;
 
   const CategoriesAdminState({
     this.categories = const [],
     this.isLoading = false,
+    this.isLoadingMore = false,
     this.error,
     this.search = '',
     this.formState = const CategoryFormIdle(),
+    this.hasMore = false,
+    this.page = 1,
+    this.pageSize = 20,
   });
 
   List<Category> get filtered => search.isEmpty
@@ -28,16 +36,24 @@ class CategoriesAdminState {
   CategoriesAdminState copyWith({
     List<Category>? categories,
     bool? isLoading,
+    bool? isLoadingMore,
     String? error,
     String? search,
     CategoryFormState? formState,
+    bool? hasMore,
+    int? page,
+    int? pageSize,
   }) =>
       CategoriesAdminState(
         categories: categories ?? this.categories,
         isLoading: isLoading ?? this.isLoading,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
         error: error,
         search: search ?? this.search,
         formState: formState ?? this.formState,
+        hasMore: hasMore ?? this.hasMore,
+        page: page ?? this.page,
+        pageSize: pageSize ?? this.pageSize,
       );
 }
 
@@ -71,14 +87,35 @@ class CategoriesAdminNotifier extends StateNotifier<CategoriesAdminState> {
     load();
   }
 
-  Future<void> load() async {
-    state = state.copyWith(isLoading: true, error: null);
+  Future<void> load({bool reset = true}) async {
+    final current = state;
+
+    if (reset) {
+      state = current.copyWith(isLoading: true, error: null, page: 1);
+    } else {
+      if (current.isLoadingMore || !current.hasMore) return;
+      state = current.copyWith(isLoadingMore: true);
+    }
+
     try {
-      final cats = await _datasource.getCategories();
-      state = state.copyWith(categories: cats, isLoading: false);
+      final page = reset ? 1 : current.page;
+      final result = await _datasource.getCategories(
+        page: page,
+        pageSize: current.pageSize,
+      );
+      state = state.copyWith(
+        categories:
+            reset ? result.results : [...state.categories, ...result.results],
+        hasMore: result.hasMore,
+        isLoading: false,
+        isLoadingMore: false,
+        page: page + 1,
+        error: null,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
+        isLoadingMore: false,
         error: e.toString().replaceAll('Exception: ', ''),
       );
     }

@@ -7,11 +7,37 @@ import '../../../theme/app_colors.dart';
 import '../../../domain/model/category.dart';
 import '../../widgets/category_form.dart';
 
-class CategoriesAdminScreen extends ConsumerWidget {
+class CategoriesAdminScreen extends ConsumerStatefulWidget {
   const CategoriesAdminScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CategoriesAdminScreen> createState() =>
+      _CategoriesAdminScreenState();
+}
+
+class _CategoriesAdminScreenState extends ConsumerState<CategoriesAdminScreen> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(categoriesAdminProvider.notifier).load(reset: false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(categoriesAdminProvider);
     final filtered = state.filtered;
 
@@ -117,18 +143,36 @@ class CategoriesAdminScreen extends ConsumerWidget {
               );
             }
 
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: filtered.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
-              itemBuilder: (_, i) => _CategoryCard(
-                category: filtered[i],
-                onToggle: () => ref
-                    .read(categoriesAdminProvider.notifier)
-                    .toggleActive(filtered[i].id, !filtered[i].isActive),
-                onEdit: () =>
-                    showCategoryForm(context, ref, initial: filtered[i]),
-                onDelete: () => _confirmDelete(context, ref, filtered[i]),
+            return RefreshIndicator(
+              color: AppColors.accent,
+              onRefresh: () =>
+                  ref.read(categoriesAdminProvider.notifier).load(),
+              child: ListView.separated(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: filtered.length + (state.hasMore ? 1 : 0),
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (_, i) {
+                  if (i < filtered.length) {
+                    final category = filtered[i];
+                    return _CategoryCard(
+                      category: category,
+                      onToggle: () => ref
+                          .read(categoriesAdminProvider.notifier)
+                          .toggleActive(category.id, !category.isActive),
+                      onEdit: () =>
+                          showCategoryForm(context, ref, initial: category),
+                      onDelete: () => _confirmDelete(context, ref, category),
+                    );
+                  }
+
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Center(
+                      child: CircularProgressIndicator(color: AppColors.accent),
+                    ),
+                  );
+                },
               ),
             );
           }),

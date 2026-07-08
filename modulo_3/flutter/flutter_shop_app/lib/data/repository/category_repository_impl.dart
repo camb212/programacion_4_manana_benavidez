@@ -10,7 +10,10 @@ class CategoryRepositoryImpl implements CategoryRepository {
   CategoryRepositoryImpl(this._datasource);
 
   @override
-  Future<List<Category>> getCategories() => _datasource.getCategories();
+  Future<List<Category>> getCategories({int page = 1, int pageSize = 20}) =>
+      _datasource
+          .getCategories(page: page, pageSize: pageSize)
+          .then((p) => p.results);
 
   @override
   Future<Category> getCategory(int id) => _datasource.getCategory(id);
