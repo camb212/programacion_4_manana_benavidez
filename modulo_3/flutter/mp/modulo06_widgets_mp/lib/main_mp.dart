@@ -17,14 +17,13 @@ import 'package:modulo06_widgets_mp/widgets/servicio_estado_mp.dart';
 // │  7  Paso 5   BuildContext                                       │
 // │  8  Paso 6   Composición de widgets                             │
 // └──────────────────────────────────────────────────────────────────┘
-const int paso = 8; // Lo dejo en 8 para que veas que ahora todos los pasos tienen temática de rentas
-
+const int paso = 8;
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
   theme: ThemeData(
     colorScheme:  ColorScheme.fromSeed(
-      seedColor:  Colors.blueAccent,          // ← Color más corporativo para agencia de autos
-      brightness: Brightness.light,    // Cambiado a claro, pero puedes usar dark si prefieres
+      seedColor:  Colors.blueAccent,          
+      brightness: Brightness.light,    
     ),
     useMaterial3: true,
   ),
@@ -74,11 +73,11 @@ void main() => runApp(MaterialApp(
         ),
       ),
     ),
-    6 => Scaffold(                              // Paso 4
+    6 => Scaffold(                            
       appBar: AppBar(title: const Text('Temporizador de Prueba de Manejo')),
       body: const Center(child: Reloj()),
     ),
-    7 => const PantallaContexto(),    // Paso 5 — ya tiene su propio Scaffold
+    7 => const PantallaContexto(),  
     _ => const Scaffold(body: Center(child: Text('Paso no definido. Intenta del 1 al 7.'))),
   },
   

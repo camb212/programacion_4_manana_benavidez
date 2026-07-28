@@ -12,7 +12,8 @@ class _RelojState extends State<Reloj> {
   Timer? _timer;    
   int  _segundos = 0;
   bool _pausado  = false;
-  final List<int> _tiemposParada = [];
+  final List<int> _tiemposParada = []; 
+
   @override
   void initState() {
     super.initState();    
@@ -30,9 +31,9 @@ class _RelojState extends State<Reloj> {
     setState(() {
       _pausado = !_pausado;
       if (_pausado) {
-        _timer?.cancel();     
+        _timer?.cancel();      
       } else {
-        _iniciarTimer();     
+        _iniciarTimer();      
       }
     });
   }
@@ -41,6 +42,7 @@ class _RelojState extends State<Reloj> {
   void dispose() {
     _timer?.cancel();          
     super.dispose();          
+  }
 
   String _formatearTiempo(int totalSegundos) {
     final h = totalSegundos ~/ 3600;
@@ -53,7 +55,6 @@ class _RelojState extends State<Reloj> {
     return _formatearTiempo(_segundos);
   }
 
-  // Color cambia según el tiempo transcurrido en la prueba/ruta
   Color get _colorTiempo {
     if (_segundos > 120) return Colors.deepPurple;
     if (_segundos > 60) return Colors.red;
@@ -77,11 +78,11 @@ class _RelojState extends State<Reloj> {
             fontSize:   40,
             fontFamily: 'monospace',
             fontWeight: FontWeight.bold,
-            color:      _colorTiempo,         // cambia automáticamente con el tiempo
+            color:      _colorTiempo,         
           ),
         ),
         const SizedBox(height: 16),
-        Wrap( // Cambiado a Wrap para evitar desbordamientos en pantallas pequeñas
+        Wrap( 
           spacing: 8,
           runSpacing: 8,
           alignment: WrapAlignment.center,
